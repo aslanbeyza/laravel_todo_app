@@ -348,3 +348,117 @@ class Category extends Model
     }
 }
 ```
+
+Şimdi de factories kısmını yapmamız lazım. `php artisan make:factory` bunu terminale yaz isimlendirme yapımız da şu şekilde başa model adı büyük harfle başlıyor ardından da yine büyük harfle Factory yazıcaz `CategoryFactory` gibi ekleriz database içine oluşturuyor bu factories kısmını da category factory kısmında:
+
+```php
+public function definition(): array
+{
+    return [
+        'name' => fake()->sentence(3),
+        'color' => fake()->hexColor(),
+        'description' => fake()->sentence(3),
+    ];
+}
+```
+
+bunları yazarız eloquent altından factories kısmını mutlaka dökümanından da okuyun.
+
+```php
+<?php
+
+namespace Database\Factories;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
+
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Todo>
+ */
+class TodoFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'title' => fake()->sentence(3),
+            'description' => fake()->paragraph(3),
+            'user_id' => fake()->numberBetween(1, 30),
+            'category_id' => fake()->numberBetween(1, 10),
+            'status' => fake()->randomElement(['pending', 'in_progress', 'completed']),
+            'priority' => fake()->randomElement(['low', 'medium', 'high']),
+            'due_date' => fake()->dateTimeBetween('-1 week', '+1 week'),
+            'completed_at' => fake()->dateTimeBetween('-1 week', '+1 week'),
+            'is_starred' => fake()->boolean(10),
+        ];
+    }
+}
+```
+
+Burda todo içinde factorilerimi oluşturdum ama yapmamız gereken bir ince ayar var modele gidiyoruz `use HasFactory;` diyoruz ve importunu da yapıyoruz çünkü şöyle düşün biz seeders kısmına gelince bunlar hep model üzerinden factory kısmını çalıştırıyor seeders kısmında DatabaseSeeder.php gidiyorum şimdi de:
+
+```php
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\User;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+use App\Models\Category;
+use App\Models\Todo;
+
+class DatabaseSeeder extends Seeder
+{
+    use WithoutModelEvents;
+
+    /**
+     * Seed the application's database.
+     */
+    public function run(): void
+    {
+        User::factory(30)->create(); //30 tane user oluştur
+        Category::factory(10)->create(); //10 tane category oluştur
+        Todo::factory(100)->create(); //100 tane todo oluştur
+
+        User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+        ]);
+    }
+}
+```
+
+bu kısmı yapıyoruz burda da şöyle bişey var category ve todo yer değişirse hata alırız çünkü todo nun migration dosyasına gidersek 2 tane foreignid alıyor yani arkada gidiyo sql foreignkey tanımlıyor sql de foreignkey tanımladığın tablonun ve değerlerin var olması lazım eğer olmasa hata alırsın o tablo oluşmadan foreign id atamaya çalışırsan o yüzden kategoriyi daha önce tanımlıyoruz useri da ondan da önce tanımlıyoruz ki todoyu tanımladığımızda hata çıkmasın bunlarıda yaptıktan sonra eğerki sen migration kısmında bi yerlerde foreignkeyıd kullanıyorsan todo categoryi ye bağlı demketir bu o yüzden categoryid tododan önce çalıştırmalısın ki o bağlı olduğunuz yere değer yazılabilsin olmayan şeyi yazamıyorsunuz ve hata alıyorsunuz şimdi de terminalde `php artisan db:seed` diyip verilerimi gönderdim.
+
+Ayrıca DatabaseSeeder.php burda biz istersek gelip:
+
+```php
+Todo::create([
+    // ...
+])
+```
+
+şeklinde kendimizde todoyu oluşturabiliriz bu birincisi ikincisi de bazen oluşturmamız gerekir mesela bazı değerler vardır oluşturmamız gerekir:
+
+```php
+Cities::create([
+    "name" => 'Adana',
+    "plaka" => '01'
+])
+```
+
+hemen dolmasın diye yöntemler var seeders altında DatabaseSeeder.php dışında farklı seederlar oluşturabiliriz onu da `php artisan make:seed UserSeeder` tarzında oluşturabilirsin. Hatta kendi verisine uygun yerde durur daha mantıklı olur kod temizliği bakımı vs daha kolay olur ama DatabaseSeeder kısmını baz alır database diğerlerini baz almaz onları çağırmamız gerekir aşağıdaki fonksiyon şeklinde:
+
+```php
+$this->call([
+    UserSeeder::class,
+    CategorySeeder::class,
+    TodoSeeder::class,
+]);
+```
+
+ 

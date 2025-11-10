@@ -5,6 +5,8 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Category;
+use App\Models\Todo;
 
 class DatabaseSeeder extends Seeder
 {
@@ -15,11 +17,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // User::factory(30)->create(); //30 tane user oluştur
+        // Category::factory(0)->create(); //10 tane category oluştur
+        // Todo::factory(300)->create(); 100 tane todo oluştur
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+       $this->call([
+        UserSeeder::class,
+        CategorySeeder::class,
+        TodoSeeder::class,
+       ]);
     }
 }
