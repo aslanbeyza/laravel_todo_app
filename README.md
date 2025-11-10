@@ -176,3 +176,108 @@ Docker compose dosyası var o da sailin compose dosyası.
 Vite.config.js burda da tailwind ayarı vite config ayarı vs yapıyor.
 
 Dosya yapısı bu kadar.
+
+## Veritabanı Migration İşlemleri
+
+Şimdi de veritabanına tablolarımı oluşturarak kodlamaya başlayacağım. Önce databaseden migration kısımlarını yapalım ardından çıkalım ve app den model yapalım ordan sonra suni veri oluşturalım gibi ayrı ayrı commit alıcam ki kontrolü kolay olsun.
+
+### Artisan Make Komutları
+
+Terminale `php artisan make` yazınca hazır dosyaları oluşturabiliyoruz. Mesela migration oluşturacağım zaman ben `make:migration` yazarsam eğer bana hazır bir şablon veriyor. Gidip migrations klasörü altında dosya oluşturmak yerine bana migration kısmına uygun bir format veriyor ve ben o sayede de direk kodlamaya başlayabiliyorum.
+
+**Örnek:**
+
+```bash
+php artisan make:migration create_categories_table
+```
+
+Şekilinde yaz genel olarak çoğul yaz isimlendirme önemli burada standartlara uymaya çalışın. Binding var Laravel'de arka tarafta kolayca buluyor Laravel varsayılanına.
+
+### Migration Yapısı
+
+`php artisan make:migration create_categories_table` bunu çalıştırınca hazır bir format verir bana. İçinde biri `up` dir biri de `down` dır.
+
+- **up kısmı:** `php artisan migrate` diyerek tabloları veritabanına göndermemi sağlar
+- **down kısmı:** `php artisan rollback` diyerek veritabanındaki tabloları silmemi sağlar
+
+Tek başına silmesi için categories ile aynı isimde olması gerekiyor.
+
+### Column Types
+
+Laravel dokümantasyonunda database altında migration kısmına git biraz aşağı kaydırınca "Available Column Types" dicek. Kullanabileceğimiz sütunların veri tipleri gibi düşünebilirsin. Orda onlarca var onları okuyarak hangisi işine daha çok yarıyorsa onu kullanacaksın.
+
+### Categories Tablosu
+
+Ben şimdi gidip categories için migration kısmını oluşturucam up kısmını:
+
+```php
+public function up(): void
+{
+    Schema::create('categories', function (Blueprint $table) {
+        $table->id();
+        $table->string('name');
+        $table->string('color')->nullable();
+        $table->text('description')->nullable();
+        $table->timestamps();
+    });
+}
+```
+
+Oluşturdum şimdi. Bu up oluşturdun ya bunu veritabanına göndermek için de `php artisan migrate` yazarsın.
+
+### Todos Tablosu
+
+Şimdi de 2. tablomu oluşturucam `php artisan make:migration create_todos_table` yaptım. Up kısmını doldurucam şimdi:
+
+```php
+public function up(): void
+{
+    Schema::create('todos', function (Blueprint $table) {
+        $table->id();
+        $table->string('title');
+        $table->text('description')->nullable();
+        $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+        $table->foreignId('category_id')->nullable()->constrained()->cascadeOnDelete();
+        $table->enum('status', ['pending', 'in_progress', 'completed'])->default('pending');
+        $table->enum('priority', ['low', 'medium', 'high'])->default('low');
+        $table->date('due_date')->nullable(); // Tamamlama tarihi olarak gösterilecek kişi girecek
+        $table->dateTime('completed_at')->nullable(); // Tamamlama tarihi olarak gösterilecek sistem tarafından otomatik olarak güncellenecek
+        $table->softDeletes(); // Silinme tarihi olarak gösterilecek
+        $table->timestamps();
+    });
+}
+```
+
+### Foreign Key ve Constrained
+
+```php
+$table->foreignId('user_id')->constrained()->cascadeOnDelete();
+```
+
+Bu kısım `constrained` bu gidiyor foreignId verdiğin tabloya bağlıyor. Laravel geliyor `user_id` bunu alıyor diyor ki herkes standart isimlendirmeye uyarsa `user_id` nin ilk kısmı yani `user` sonra diyor ki eğer bu bir tablo ise `users` dir çünkü tablo isimleri çoğuldur. Sonra başına sonuna `create_users_table` ekliyor sonra bu şekilde bir arama yapıyor migrations kısmında. Sonra migration kısmını buluyor bulduktan sonra da ordaki `id` kısmına bakıyor ve `id` yi alıyor ve bunu SQL de bizim yaptığımız foreign key kısmında yaptığı bağlamayı yapmış oluyor. `constrained` kısmına kadar bunu yapıyor. İsimlendirme önemli bu yüzden.
+
+### cascadeOnDelete
+
+`cascadeOnDelete` kısmı da şu anlama gelir: Eğer siz bu todoyu oluşturan kullanıcıyı silerseniz kaydını silerse mesela bu online bi platform olsun herkes kendi todosunu oluştursun onun oluşturduğu todoların hepsini de otomatik olarak sil dersin bu sayede hata almaktan uzaklaşırsın.
+
+Mesela kullanıcı paylaşımlar yapmış hesabını siliyor ama paylaşımı duruyor. Paylaşımı duruyorsa orda kaç yönetme şekli var:
+
+1. **Birincisi cascadeOnDelete dir:** Yani kullanıcı hesabını silerse onun gönderilerini de sil ki insanlar gönderiyi görüp kullanıcıya ulaşmaya gittiklerinde hata olmasın bu birinci yöntemdir.
+
+2. **İkinci yöntem de Reddit gibi:** Kullanıcı kaydını sildi tarzı bişey yapıyor ek fonksiyon oluşturuyor `cascadeOnDelete` yerine kullanıcı ile ilgili bilgileri getirme "silinmiş kullanıcı" yaz gibi bir yöntem de izliyor.
+
+Ama biz kullanıcı verilerini siliyorsa todolarını da sil diyoruz.
+
+### Soft Deletes
+
+```php
+$table->softDeletes(); // Silinme tarihi olarak gösterilecek
+```
+
+Bu `deleted_at` adında bir sütun oluşturuyor. Siz bir todoyu silince todoyu veritabanından direkt silmiyor. Direk silmek yerine `deleted_at` kısmına sil dediğiniz andaki tarihi yazıyor. Kullanıcıya göstermiyor arka planda bu şekilde bir kodu var kullanıcı onu görmüyor.
+
+Büyük şirketlerin veritabanları bu şekilde çalışır çünkü o veriler birer ispat niteliğindedir veri niteliğindedir. O verileri işlemek için bizden izin alırlar. O verilerle ilgili sıkıntı çıkınca mahkemeye sunarlar. O yüzden hiçkimse verilerimizi silmez soft delete ile saklarlar.
+
+Todoyu veritabanından direkt silmiyor. Neyse bu up kısmını oluşturduktan sonra `php artisan migrate` demen lazım. 
+
+Database Client JDBC bunu kurdum birden fazla veritabanını açmama yarıyor.Bir sonraki kısımda bunu ele alıcam
