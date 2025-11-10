@@ -278,6 +278,73 @@ Bu `deleted_at` adında bir sütun oluşturuyor. Siz bir todoyu silince todoyu v
 
 Büyük şirketlerin veritabanları bu şekilde çalışır çünkü o veriler birer ispat niteliğindedir veri niteliğindedir. O verileri işlemek için bizden izin alırlar. O verilerle ilgili sıkıntı çıkınca mahkemeye sunarlar. O yüzden hiçkimse verilerimizi silmez soft delete ile saklarlar.
 
-Todoyu veritabanından direkt silmiyor. Neyse bu up kısmını oluşturduktan sonra `php artisan migrate` demen lazım. 
+Todoyu veritabanından direkt silmiyor. Neyse bu up kısmını oluşturduktan sonra `php artisan migrate` demen lazım.
 
-Database Client JDBC bunu kurdum birden fazla veritabanını açmama yarıyor.Bir sonraki kısımda bunu ele alıcam
+Database Client JDBC bunu kurdum birden fazla veritabanını açmama yarıyor. Bir sonraki kısımda bunu ele alıcam veritabanı tablolarımızı oluşturmuştuk şimdi de bu tablolara modeller oluşturalım. Ben bu sırayla gidiyorum Ben genel olarak önce tabloları oluşturmayı sonra model oluşturmayı seviyorum `php artisan make:model` diyorum standartlara uyabilmek ve beni hızlandırsın diye enter diyincede model ismini isteyecek baş harfi büyük tekil bir isim vermeni isteyecek.
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Category extends Model
+{
+    //
+}
+```
+
+bu tarz model klasöründe oluşuyo işte hemen modelinin içine `protected $fillable =` bunu yaz birçok programlama dilinde get ve set metotları olur veritabanından çekebileceğimiz sütunları ve veritabanına gönderebileceğimiz sütunları bunlar hangileridir senden bunların izinlerini ister. O yüzden biz bunları get ve set metotlarını ekleriz burdada kabaca bu şekilde ekliyoruz `protected $fillable =` yazıyoruz ve kendisi isimleri ekliyor migrations kısmındaki tablo satırları var ya onu koycan içine `protected $fillable = ['name', 'color', 'description'];` id ve timestamps kısmını yazmıyoruz onlar zaten varsayılan olarak gelir sadece bizim sonradan eklediklerimizi yazmamız yeterli birde ilişkileri yönetmek lazım model kısmında burdada laravelin eloquent orm kısmı devreye giriyor lraavelle hızlıca yönetmeyi sağlar bu bunun için bir altyapı geliştirmişler. Bizim şunu yapmamıza gerek kalmıyor 2 tablodan join at şu sütunlara göre joinleri birleştir şuna göre grupla gibi şeyleri yazmıyoruz laravelin en büyük artılarından biride bu fluent kod yazma diye geçiyor bunun için fonksiyon geliştirmisler ve bizim bu fonksiyonları oluşturmamızı istiyorlar.
+
+```php
+class Todo extends Model
+{
+    protected $fillable = [
+        'title',
+        'description',
+        'user_id',
+        'category_id',
+        'status',
+        'priority',
+        'due_date',
+        'completed_at',
+        'is_starred'
+    ];
+}
+```
+
+mesela burda todo ile neye bağlanıcam Hangi sütünla ilişkili hangi modelle ilişkili `$this` demek bu sınıfı ifade eder. yani Todo
+
+```php
+//Şimdi de bu modelin içine relationleri ekleyelim
+public function user(): BelongsTo //BelongsTo ile tip olarak daha güvenli hale getiririz
+{
+    return $this->belongsTo(User::class);
+}
+
+public function category(): BelongsTo
+{
+    return $this->belongsTo(Category::class);
+}
+```
+
+```php
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+class Category extends Model
+{
+    protected $fillable = ['name', 'color', 'description'];
+
+    //Şimdi de bu modelin içine relationleri ekleyelim
+    public function todos(): HasMany
+    {
+        return $this->hasMany(Todo::class); //döndür kategorinin içinde oaln todoları diyor
+    }
+}
+```
