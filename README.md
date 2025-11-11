@@ -519,10 +519,27 @@ class CategoryController extends Controller
         
     }
 }
-viewleride buna göre oluştururuz fonksiyon isimlendirmelerine göre yani mesela mesela içinde index varya fonksiyon index.blade.php olcak ama her controller için ayrı ya çakışmasınlar diye modelin çoğul ismiyle views içinde klasör oluştur onun içine yaz. tek tek yaz create.blade.php vs  elle manuel sonra bootstrapden table aldım index koydum ama nerden görüntüleyeceğim  şimdi views altında routes kısmına git içinden web.php kısmına git biz  html dosyası yapacaksak eğer http isteği get isteği yapmamız lazım bunuda route kısmında yapıcaz web.php de Route::get('/categories', function() {
+Viewleride buna göre oluştururuz fonksiyon isimlendirmelerine göre yani mesela mesela içinde index varya fonksiyon `index.blade.php` olcak ama her controller için ayrı ya çakışmasınlar diye modelin çoğul ismiyle views içinde klasör oluştur onun içine yaz. Tek tek yaz `create.blade.php` vs elle manuel sonra bootstrapden table aldım index koydum ama nerden görüntüleyeceğim şimdi views altında routes kısmına git içinden `web.php` kısmına git biz html dosyası yapacaksak eğer http isteği get isteği yapmamız lazım bunuda route kısmında yapıcaz `web.php` de:
+
+```php
+Route::get('/categories', function() {
     return view('categories.index');
-}); şeklinde yapılır.
+});
+```
 
-http://localhost:8080/categories burdada görüntülenir.
+şeklinde yapılır.
 
-php artisan optimize:clear  bu cache i günceller. 
+[http://localhost:8080/categories](http://localhost:8080/categories) burdada görüntülenir.
+
+```bash
+php artisan optimize:clear
+```
+
+bu cache i günceller. 
+
+blade de 2 türlü laravel kodu yazabiliriz. Birincisi {{}} içinde ikinciside @ işareti kullanarak @ işareti ile fonksiyonları çağırırız 
+
+   @foreach($categories as $category)
+
+   @endforeach  
+   bunun içinde yazdığın herşey döngü şeklinde çalışır. 

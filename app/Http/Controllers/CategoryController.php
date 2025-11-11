@@ -10,7 +10,10 @@ class CategoryController extends Controller
   //Tüm kategorileri listelemek için kullanılan fonksiyon
     public function index()
     {
-    
+        //önce verileri veritabanından çekelim model üzerinden
+       $categories = Category::all();
+       //sonra view dosyasını dönelim çünkü index.blade.php dosyasına göndericez bir html döndürmemiz lazım 
+      return view('categories.index', compact('categories'));
     }
 
    //yeni kategori oluşturmak için kullanılan fonksiyon

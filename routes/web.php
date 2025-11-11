@@ -1,11 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CategoryController;
 
 Route::get('/', function () {
     return view('welcome');
 });
-
-Route::get('/categories', function() {
-    return view('categories.index');
-});
+//CategoryController classına git index fonksiyonunu çalıştır.
+Route::get('/categories', [CategoryController::class, 'index']);
