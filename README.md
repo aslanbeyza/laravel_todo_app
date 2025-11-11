@@ -460,5 +460,69 @@ $this->call([
     TodoSeeder::class,
 ]);
 ```
+Eloquent  ilişkileri, veritabanı tablolarını otomatik olarak oluşturmaz; ilişkileri tanımlar ama tablolar migrationslar ile oluşrutulmalıdır. 
 
- 
+Factory'ler, model sınıfları için sahte veri üretmeye yarayan yapılardır.Yani modeller için hızlı ve kolay bir şekilde sahte veri oluşturmaya yarayan yapılardır ve genellikle test veya geliştirme aşamasında kullanılırlar. 
+
+Normalde ben database ardından model ardından factory ve seeder kısmını oluşturduktan sonra direk controller oluşturmaya geçerim ama anlamak için başka şekilde ilerleyeceğiz 
+
+resource views welcome.blade.php kısmına geçicem. Yani aslında html dosyası önce html oluşturayım o html üzerinde gelen verileri gösterdiğimde controller daha anlamlı kalacaktır diye düşündüm. php artisan make:controller de enter de sytax olarakda UserController gibi düşün sonra da Resource olanı seçicez. 
+ What model should this resource controller be for? (Optional) sonra bu soruyu soracak bize ve diyoki hangi modelden işte kaynakları kontrol etmek istiyorsun. Category yaz model bu Category bu da bize Category modeline uygun hazır bir şekilde bir tane controller oluşturuyor ve fonksiyonlarını yazıyor 
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Category;
+use Illuminate\Http\Request;
+
+class CategoryController extends Controller
+{
+  //Tüm kategorileri listelemek için kullanılan fonksiyon
+    public function index()
+    {
+    
+    }
+
+   //yeni kategori oluşturmak için kullanılan fonksiyon
+    public function create()
+    {
+        
+    }
+
+    
+// herhangi bir html dönmez  direk veritabanına kaydeder.
+    public function store(Request $request)
+    {
+        
+    }
+//tek bir veriyi gösteriririz 
+    public function show(Category $category)
+    {
+        
+    }
+
+    //veriyi editleyebileceğimiz sayfayı gösteriririz formu 
+    public function edit(Category $category)
+    {
+        
+    }
+
+//formu doldurdular update dediler veritabanından günceller.
+    public function update(Request $request, Category $category)
+    {
+        
+    }
+
+    //son olarakda o veriyi veritabanından siler 
+    public function destroy(Category $category)
+    {
+        
+    }
+}
+viewleride buna göre oluştururuz fonksiyon isimlendirmelerine göre yani mesela mesela içinde index varya fonksiyon index.blade.php olcak ama her controller için ayrı ya çakışmasınlar diye modelin çoğul ismiyle views içinde klasör oluştur onun içine yaz. tek tek yaz create.blade.php vs  elle manuel sonra bootstrapden table aldım index koydum ama nerden görüntüleyeceğim  şimdi views altında routes kısmına git içinden web.php kısmına git biz  html dosyası yapacaksak eğer http isteği get isteği yapmamız lazım bunuda route kısmında yapıcaz web.php de Route::get('/categories', function() {
+    return view('categories.index');
+}); şeklinde yapılır.
+
+http://localhost:8080/categories burdada görüntülenir.
+
+php artisan optimize:clear  bu cache i günceller. 
