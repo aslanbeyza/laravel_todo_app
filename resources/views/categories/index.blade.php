@@ -27,7 +27,7 @@
 
         <tr>
           <th scope="row">{{ $category->id }}</th>
-          <td>{{ $category->name }}</td>
+          <td><a href={{route('categories.show', $category)}}>{{ $category->name }}</a></td>
           <td>{{ $category->color }}</td>
           <td>{{ $category->description }}</td>
         </tr>

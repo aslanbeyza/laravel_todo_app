@@ -543,3 +543,6 @@ blade de 2 türlü laravel kodu yazabiliriz. Birincisi {{}} içinde ikinciside @
 
    @endforeach  
    bunun içinde yazdığın herşey döngü şeklinde çalışır. 
+
+
+   şimdi de CategoryController kısmındaki show kısmına odaklanıcam. indexe çok benziyor create ve storagein ek konfügürasyonlarını yapacağız edit ve update içinde aartık bir for oluşturmamız gerekiyor index derken şundan bahsediyoruz kategorilerimiz var örneğin 3 e tıkladığımız zaman sadece üçü açması findOrfail ile id bulup o şekilde de kategoriyi getirebilirdik ama laravel Category $category yapıyo dikkat edersen 
