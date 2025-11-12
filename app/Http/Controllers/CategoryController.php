@@ -35,5 +35,9 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category) {}
 
     //son olarakda o veriyi veritabanından siler 
-    public function destroy(Category $category) {}
+    public function destroy(Category $category) {
+
+        $category->delete(); //modeli hedef aldığı için direk siler.
+        return redirect()->route('categories.index');
+    }
 }

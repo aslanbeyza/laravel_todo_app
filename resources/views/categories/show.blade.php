@@ -18,10 +18,14 @@
             <p class="card-text">{{ $category->color }}</p>
             <p class="card-text">{{ $category->description }}</p>
             <button type="button" class="btn btn-danger">Edit</button>
-            <button type="button" class="btn btn-secondary">Delete</button>
-            </div>
-    </div>
+            <form action={{route('categories.destroy', $category->id)}} method="POST">
+                @csrf
+                @method('DELETE')
 
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </form>
+        </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
