@@ -12,7 +12,8 @@
 <body>
   <div class="container">
     <h1>Categories</h1>
-    <table class="table table-striped">
+      <a href="{{ route('categories.create') }}" type="button" class="btn btn-primary">Kategori Ekle</a>
+      <table class="table table-striped">
       <thead>
         <tr>
           <th scope="col">#</th>

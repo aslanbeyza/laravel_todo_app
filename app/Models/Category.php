@@ -2,18 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Category extends Model
 {
     use HasFactory;
+
     protected $fillable = ['name', 'color', 'description'];
 
-    //Şimdi de bu modelin içine relationleri ekleyelim
-    public function todos():HasMany
+    // Şimdi de bu modelin içine relationleri ekleyelim
+    public function todos(): HasMany
     {
-        return $this->hasMany(Todo::class); //döndür kategorinin içinde oaln todoları diyor 
+        return $this->hasMany(Todo::class); // döndür kategorinin içinde oaln todoları diyor
     }
 }

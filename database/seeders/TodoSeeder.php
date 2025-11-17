@@ -2,9 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Todo;
+use Illuminate\Database\Seeder;
 
 class TodoSeeder extends Seeder
 {
@@ -13,7 +12,7 @@ class TodoSeeder extends Seeder
      */
     public function run(): void
     {
-        Todo::factory(300)->create(); //100 tane todo oluştur
+        Todo::factory(300)->create(); // 100 tane todo oluştur
 
     }
 }

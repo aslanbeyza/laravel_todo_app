@@ -19,10 +19,10 @@ return new class extends Migration
             $table->foreignId('category_id')->nullable()->constrained()->cascadeOnDelete();
             $table->enum('status', ['pending', 'in_progress', 'completed'])->default('pending');
             $table->enum('priority', ['low', 'medium', 'high'])->default('low');
-            $table->date('due_date')->nullable(); //tamamlama tarihi olarak gösterilecek kişi giricek 
-            $table->dateTime('completed_at')->nullable(); //tamamlama tarihi olarak gösterilecek sistem tarafından otomatik olarak güncellenecek
-            $table->softDeletes(); //silinme tarihi olarak gösterilecek
-            $table->boolean('is_starred')->default(false); //önemli mi diye soruyoruz
+            $table->date('due_date')->nullable(); // tamamlama tarihi olarak gösterilecek kişi giricek
+            $table->dateTime('completed_at')->nullable(); // tamamlama tarihi olarak gösterilecek sistem tarafından otomatik olarak güncellenecek
+            $table->softDeletes(); // silinme tarihi olarak gösterilecek
+            $table->boolean('is_starred')->default(false); // önemli mi diye soruyoruz
 
             $table->timestamps();
         });

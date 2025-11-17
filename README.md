@@ -557,3 +557,21 @@ blade de 2 türlü laravel kodu yazabiliriz. Birincisi {{}} içinde ikinciside @
             </form>
 
             bu şekilde yaparız  @csrf güvenliğimiz için yetkisiz kişi form gönderemesin diye 
+
+
+
+mesela bazen bir model oluşturucam o model için mesela user oluşturucam  hangi şehirde yaşıyosun dicez mesela
+şehirinde user ile bir alakası yok yani içinde bulunmuyor farklı bi class o  
+public function create():void {
+        cities 
+        return view('categories.create'); //veri döndürmüyorum formun olduğu sayfayı döndürücem.
+    }
+
+ burda cities  çekmek gerekebilir ama ilişkili farklı bir dosyan yoksa sadece view dosyasını döndürmen yeterli 
+Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+route kısmını oluşturdum  routes içindeki web.php kısmında daha sonrada resource içinde views kısmına gelip categories içindeki
+create.blade.php kısmına geliyorum html oluştur orda ! bunla 
+Şimdi bizim routelarımız varya onları sırasıyla okuyor php kaç route varsa dolaşıyor bulana kadar 
+yani genel olarak create kısmını show kısmını üzerine koy 
+şimdi form oluşturdum create kısmını yaptım şimdi de form oluşturma adımına geçtik 
+

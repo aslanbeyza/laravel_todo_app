@@ -7,37 +7,43 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    //Tüm kategorileri listelemek için kullanılan fonksiyon
+    // Tüm kategorileri listelemek için kullanılan fonksiyon
     public function index()
     {
-        //önce verileri veritabanından çekelim model üzerinden
+        // önce verileri veritabanından çekelim model üzerinden
         $categories = Category::all();
-        //sonra view dosyasını dönelim çünkü index.blade.php dosyasına göndericez bir html döndürmemiz lazım 
+
+        // sonra view dosyasını dönelim çünkü index.blade.php dosyasına göndericez bir html döndürmemiz lazım
         return view('categories.index', compact('categories'));
     }
 
-    //yeni kategori oluşturmak için kullanılan fonksiyon
-    public function create() {}
-
+    // yeni kategori oluşturmak için kullanılan fonksiyon
+    public function create()
+    {
+        return view('categories.create'); // veri döndürmüyorum formun olduğu sayfayı döndürücem.
+    }
 
     // herhangi bir html dönmez  direk veritabanına kaydeder.
     public function store(Request $request) {}
-    //tek bir veriyi gösteriririz 
-    public function show(Category $category) //Category $category demek bu Category modelinin category adında değişkenini istiyor bunu route kısmında {category} ile alıyoruz.
+
+    // tek bir veriyi gösteriririz
+    public function show(Category $category) // Category $category demek bu Category modelinin category adında değişkenini istiyor bunu route kısmında {category} ile alıyoruz.
     {
         return view('categories.show', compact('category'));
     }
 
-    //veriyi editleyebileceğimiz sayfayı gösteriririz formu 
+    // veriyi editleyebileceğimiz sayfayı gösteriririz formu
     public function edit(Category $category) {}
 
-    //formu doldurdular update dediler veritabanından günceller.
+    // formu doldurdular update dediler veritabanından günceller.
     public function update(Request $request, Category $category) {}
 
-    //son olarakda o veriyi veritabanından siler 
-    public function destroy(Category $category) {
+    // son olarakda o veriyi veritabanından siler
+    public function destroy(Category $category)
+    {
 
-        $category->delete(); //modeli hedef aldığı için direk siler.
+        $category->delete(); // modeli hedef aldığı için direk siler.
+
         return redirect()->route('categories.index');
     }
 }

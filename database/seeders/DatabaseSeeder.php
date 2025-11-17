@@ -2,11 +2,11 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
+use App\Models\Todo;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Category;
-use App\Models\Todo;
 
 class DatabaseSeeder extends Seeder
 {
@@ -21,10 +21,10 @@ class DatabaseSeeder extends Seeder
         // Category::factory(0)->create(); //10 tane category oluştur
         // Todo::factory(300)->create(); 100 tane todo oluştur
 
-       $this->call([
-        UserSeeder::class,
-        CategorySeeder::class,
-        TodoSeeder::class,
-       ]);
+        $this->call([
+            UserSeeder::class,
+            CategorySeeder::class,
+            TodoSeeder::class,
+        ]);
     }
 }
