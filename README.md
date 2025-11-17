@@ -574,4 +574,38 @@ create.blade.php kısmına geliyorum html oluştur orda ! bunla
 Şimdi bizim routelarımız varya onları sırasıyla okuyor php kaç route varsa dolaşıyor bulana kadar 
 yani genel olarak create kısmını show kısmını üzerine koy 
 şimdi form oluşturdum create kısmını yaptım şimdi de form oluşturma adımına geçtik 
+//getlerde sıralama önemli ama diğerlerinde değil
+@csrf tüm formlarda bunu ekleriz bunu unutma 
+ 
+    public function store(Request $request) {
+        //2 şekilde alınabilir 
+        $name = $request->input('name');
+        $color= $request->color;
+    }
+
+bunları 2 şekilde de alabilirsin yani inputu tercih et çünkü o daha güvenli 
+
+yani     public function store(Request $request) {
+        //2 şekilde alınabilir
+        $name = $request->input('name');
+        $color = $request->input('color');
+        $description = $request->input('description');
+    } bu şekilde yap bunu bizim öncelikle oluşturabilmemiz lazım. 
+
+
+    public function store(Request $request)
+    {
+        //2 şekilde alınabilir
+        $name = $request->input('name');
+        $color = $request->input('color');
+        $description = $request->input('description');
+
+        Category::create([
+            'name' => $name,  //ilki veritabanındaki sütunun isminden bahsediyor.  karşısındaki    $name  ise üstten aldığımız name
+            'color' => $color,
+            'description' => $description
+        ]);
+        return redirect()->route('categories.index');
+    }
+
 
