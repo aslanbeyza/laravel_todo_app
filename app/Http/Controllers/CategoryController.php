@@ -26,17 +26,13 @@ class CategoryController extends Controller
     // herhangi bir html dönmez  direk veritabanına kaydeder.
     public function store(Request $request)
     {
-        //2 şekilde alınabilir
-        $name = $request->input('name');
-        $color = $request->input('color');
-        $description = $request->input('description');
-
-        Category::create([
-            'name' => $name,  //ilki veritabanındaki sütunun isminden bahsediyor.  karşısındaki    $name  ise üstten aldığımız name
-            'color' => $color,
-            'description' => $description
+      $validatedCategoryData =   $request->validate([
+            'name' => 'required | string | max:25',
+            'color' => 'nullable| string | max:25',
+            'description' => 'nullable | string | max:250',
         ]);
-        return redirect()->route('categories.index');
+        Category::create($validatedCategoryData);
+        return redirect()->back()->with('success', 'Category created successfully');
     }
 
 

@@ -595,7 +595,7 @@ yani     public function store(Request $request) {
 
     public function store(Request $request)
     {
-        //2 şekilde alınabilir
+        dd($request);
         $name = $request->input('name');
         $color = $request->input('color');
         $description = $request->input('description');
@@ -607,5 +607,18 @@ yani     public function store(Request $request) {
         ]);
         return redirect()->route('categories.index');
     }
+  
+validation  gelen verinin veritabanı yapısına ya da bizim isteklerimize uygun olup olmamasına göre yapısal olarak kontrol ettiğimiz bir validation hata oluncada geri dönen kod 422 oluyor 
+authentication var mesela o da kullanıcı giriş yapmış mkı yapmamış mı olabiliyor  o da 401 oluyor 
+authorization var o da 403 oluyor 
 
+requestin validate diye bir fonksiyonu var o-önce onu kullanıcaz. 
+![img.png](img.png)
 
+redirect back ile gene aynı sayfaya döner yine aynı sayfada kalır yani 
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{session('success')}}
+        </div> 
+
+oturumda bir success bilgisi varsa alert ile onu yazdır diyoruz 
